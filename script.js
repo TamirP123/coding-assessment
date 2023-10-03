@@ -35,6 +35,7 @@
 // Clear highscore ***
 
 var startButton = document.querySelector(".start-button");
+var highscoreButton = document.querySelector(".highscore");
 var timerElement = document.querySelector(".timer-count");
 var quizArea = document.querySelector(".quiz");
 var questionTitle = document.querySelector(".question-title");
@@ -118,6 +119,7 @@ function endGame() {
 function init() {
     score = 0;
     questionCounter = 0;
+    
 }
 
 function viewHighScore() {
@@ -128,7 +130,6 @@ function viewHighScore() {
     for (var i = 0; i < highScores.length; i++) {
 
     }
-  // If todos were retrieved from localStorage, update the todos array to it
   if (lastUser !== null) {
     highScores = lastUser;
   }
@@ -188,6 +189,8 @@ function displayQuestion() {
 
 function startGame () {
     init();
+    this.remove();
+    document.querySelector("h1").innerHTML = "";
     timerCount = 80;
     startTimer();
     displayQuestion();
@@ -210,6 +213,8 @@ function startTimer() {
 
   
 startButton.addEventListener("click", startGame);
+
+// highscoreButton.addEventListener("click", viewHighScore);
 
 submitButton.addEventListener("click", function(event) {
     event.preventDefault();
