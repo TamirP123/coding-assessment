@@ -39,8 +39,13 @@ var timerElement = document.querySelector(".timer-count");
 var quizArea = document.querySelector(".quiz");
 var questionTitle = document.querySelector(".question-title");
 var feedback = document.querySelector(".feedback");
+var submitForm = document.querySelector(".form");
+var submitButton = document.querySelector("#submit");
+var initialInput = document.querySelector("#initials");
 
 var timer;
+var score;
+var highScores = [];
 var timerCount;
 var questionCounter = 0;
 // Array that contains OBJECTS which contain question, options, and answer,
@@ -96,12 +101,52 @@ var quizArray = [
 ]
 
 function endGame() {
-    quizArea.classList.add("hideHTML");
+    // Clear page
+    document.querySelector("main").innerHTML = "";
     console.log("Called");
+
+    // Display message with score, then append submit form to enter initials.
+
+    var message = document.createElement("p");
+    message.textContent = "You finished with a score of: " + score;
+
+    document.body.appendChild(message);
+    document.body.appendChild(submitForm);
+    document.getElementById("hidden").style.visibility = "visible";
+}
+
+function init() {
+    score = 0;
+    questionCounter = 0;
+}
+
+function viewHighScore() {
+    var highScoreList = document.getElementById('highScores');
+    var lastUser = JSON.parse(localStorage.getItem('user'));
+    console.log(lastUser);
+
+    for (var i = 0; i < highScores.length; i++) {
+
+    }
+  // If todos were retrieved from localStorage, update the todos array to it
+  if (lastUser !== null) {
+    highScores = lastUser;
+  }
+
+    document.querySelector("form").innerHTML = "";
+    // Source code found on StackOverflow
+    // highScores.sort((a, b) => b.score - a.score);
+    
+    highScoreList.innerHTML = score;
+    document.getElementById("high-scores-container").style.visibility = "visible";
+
+    // var restartButton = document.createElement("button");
+    // restartButton.addEventListener("click", startGame());
+    // document.body.appendChild(restartButton);
 }
 
 function checkAnswer(event) {
-    // console.log("Working");
+    // Check if answer is right or wrong
     console.log(event.target);
     if (event.target.textContent === quizArray[questionCounter].correctAnswer) {
         feedback.textContent = "You got the question right";
@@ -114,6 +159,9 @@ function checkAnswer(event) {
     console.log(quizArray.length);
     console.log(questionCounter);
     if (timerCount <= 0 || questionCounter === quizArray.length) {
+        clearInterval(timer);
+        score = timerCount;
+        console.log(score);
         endGame();
     }
     else {
@@ -122,6 +170,7 @@ function checkAnswer(event) {
     
 }
 function displayQuestion() {
+    // Displays question and loops through.
     var currentQuestion = quizArray[questionCounter].question;
     console.log(currentQuestion);
     quizArea.innerHTML = "";
@@ -134,32 +183,11 @@ function displayQuestion() {
         button.addEventListener("click", checkAnswer);
         console.log(questionCounter);
     }
-    
-    // var option1 = document.createElement('BUTTON');
-    // var option1Text = document.createTextNode(quizArray[0].options[0]);
-    //     option1.appendChild(option1Text);
-
-    //     var option2 = document.createElement('BUTTON');
-    // var option2Text = document.createTextNode(quizArray[0].options[1]);
-    //     option2.appendChild(option2Text);
-
-    //     var option3 = document.createElement('BUTTON');
-    // var option3Text = document.createTextNode(quizArray[0].options[2]);
-    //     option3.appendChild(option3Text);
-
-    //     var option4 = document.createElement('BUTTON');
-    // var option4Text = document.createTextNode(quizArray[0].options[3]);
-    //     option4.appendChild(option4Text);
-
-    // quizArea.textContent = quizArray[0].question;
-    // quizArea.appendChild(option1);
-    // quizArea.appendChild(option2);
-    // quizArea.appendChild(option3);
-    // quizArea.appendChild(option4);
 }
 
 
 function startGame () {
+    init();
     timerCount = 80;
     startTimer();
     displayQuestion();
@@ -169,9 +197,35 @@ function startTimer() {
     // Sets timer
     timer = setInterval(function() {
       timerCount--;
+      if (timerCount === 0){
+        //timer to end the game after the time is up
+        clearInterval(timer);
+        score = timerCount;
+        console.log(score);
+        endGame();
+}
       timerElement.textContent = timerCount;
     }, 1000);
   }
 
   
 startButton.addEventListener("click", startGame);
+
+submitButton.addEventListener("click", function(event) {
+    event.preventDefault();
+    
+    // create user object from submission
+    var user = {
+      name: initialInput.value.trim(),
+      score: score
+    };
+  
+    // set new submission to local storage 
+    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("highScores", JSON.stringify([]));
+    var updatedUser = localStorage.getItem("user");
+    updatedUser = JSON.parse(updatedUser);
+    highScores.push(updatedUser);
+    console.log(updatedUser);
+    viewHighScore();
+  });

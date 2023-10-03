@@ -19,10 +19,23 @@
         <button class="start-button">Start</button>
         <h2 class = "question-title"></h2>
         <div class="quiz">
-            
         </div>
         <p class ="feedback"></p>
     </main>
+
+    <div class="form" id="hidden">
+        <form method="POST">
+          <div class="input-group">
+            <input type="text" name="name" id="initials" placeholder="Initials" />
+          </div>
+          <div id="msg"></div>
+          <button id="submit">Submit</button>
+        </form>
+      </div>
+
+      <div id="high-scores-container">
+        <ol id ="highScores">List</ol>
+      </div>
 
     <script src="script.js"></script>
 </body>

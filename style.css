@@ -1,3 +1,11 @@
-.hideHTML {
-    display: none;
+#hidden {
+    visibility: hidden;
 }
+
+#show {
+    visibility: visible;
+}
+
+#high-scores-container {
+    visibility: hidden;
+  }
