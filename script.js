@@ -46,7 +46,6 @@ var initialInput = document.querySelector("#initials");
 
 var timer;
 var score;
-var highScores = [];
 var timerCount;
 var questionCounter = 0;
 // Array that contains OBJECTS which contain question, options, and answer,
@@ -54,52 +53,48 @@ var quizArray = [
     {
         question: "What does HTML stand for?",
         options: ["HyperText Markup Language",
-                "Random 1", 
-                "Random 2", 
-                "Random 3"],
+                "Cascading Style Sheets", 
+                "Javascript", 
+                "Java"],
         correctAnswer: "HyperText Markup Language"
     },
     {
         question: "What does CSS stand for?",
         options: ["Cascading Style Sheets",
-                "Random 1", 
-                "Random 2", 
-                "Random 3"],
+                "Java", 
+                "Python", 
+                "HTML"],
         correctAnswer: "Cascading Style Sheets"
     },
     {
         question: "What is Javascript?",
-        options: ["A programming language that creats interactity within a webpage",
-                "Random 1", 
-                "Random 2", 
-                "Random 3"],
-        correctAnswer: "A programming language that creats interactity within a webpage"
+        options: ["A programming language that creates interactity within a webpage",
+                "Language that displays elements on a screen", 
+                "Language that stlyes elements on a page", 
+                "An application programming interface for either a web server or a web browser."],
+        correctAnswer: "A programming language that creates interactity within a webpage"
     },
     {
-        question: "What is Javascript?",
+        question: "What is a Web API?",
         options: ["A programming language that creats interactity within a webpage",
-                "Random 1", 
-                "Random 2", 
-                "Random 3"],
-        correctAnswer: "A programming language that creats interactity within a webpage"
+                "Data representation of the objects that comprise the structure and content of a document on the web.", 
+                "A programming language that creates interactity within a webpage", 
+                "An application programming interface for either a web server or a web browser."],
+        correctAnswer: "An application programming interface for either a web server or a web browser."
     },
     {
-        question: "What is Javascript?",
+        question: "What is the DOM?",
         options: ["A programming language that creats interactity within a webpage",
-                "Random 1", 
-                "Random 2", 
-                "Random 3"],
-        correctAnswer: "A programming language that creats interactity within a webpage"
-    },
-    {
-        question: "What is Javascript?",
-        options: ["A programming language that creats interactity within a webpage",
-                "Random 1", 
-                "Random 2", 
-                "Random 3"],
-        correctAnswer: "A programming language that creats interactity within a webpage"
+                "Online software development platform", 
+                "Data representation of the objects that comprise the structure and content of a document on the web.", 
+                "Version control system used for tracking changes in computer files"],
+        correctAnswer: "Data representation of the objects that comprise the structure and content of a document on the web."
     }
 ]
+
+if (!localStorage.getItem("highScores")) {
+    localStorage.setItem("highScores", JSON.stringify([]));
+}
 
 function endGame() {
     // Clear page
@@ -122,28 +117,46 @@ function init() {
     
 }
 
+// Locate title parent
+// On start click > Hidden
+
+
+// Reset Button
+    // Restart button below highscoreList
+    // Event listener for click
+    // Executes startGame()
+        // Remove highScoreList
+
+    // Attach event listener to viewHighScorebutton
+    // Execute viewHighScore()
+
 function viewHighScore() {
-    var highScoreList = document.getElementById('highScores');
-    var lastUser = JSON.parse(localStorage.getItem('user'));
-    console.log(lastUser);
+    // var highScoreList = document.getElementById('highScores');
+    var highScoreList = document.getElementById('high-scores-container');
+    var highScores = JSON.parse(localStorage.getItem('highScores'));
+    console.log(highScores);
 
+
+    // Loop through highScores array
+    // Create element
+    // Add text content of highscore and initials to element
+    // Append element to highScoresList
     for (var i = 0; i < highScores.length; i++) {
-
+        var userInfo = document.createElement("p");
+        userInfo.textContent = `${highScores[i].name} - ${highScores[i].score}`;
+        highScoreList.appendChild(userInfo);
     }
-  if (lastUser !== null) {
-    highScores = lastUser;
-  }
+    // highScoreList.hidden = false;
+    highScoreList.removeAttribute("hidden");
 
     document.querySelector("form").innerHTML = "";
-    // Source code found on StackOverflow
-    // highScores.sort((a, b) => b.score - a.score);
     
-    highScoreList.innerHTML = score;
-    document.getElementById("high-scores-container").style.visibility = "visible";
+    
 
     // var restartButton = document.createElement("button");
+    // restartButton.textContent = "Restart Quiz";
     // restartButton.addEventListener("click", startGame());
-    // document.body.appendChild(restartButton);
+    // highScoreList.appendChild(restartButton);
 }
 
 function checkAnswer(event) {
@@ -189,8 +202,7 @@ function displayQuestion() {
 
 function startGame () {
     init();
-    this.remove();
-    document.querySelector("h1").innerHTML = "";
+    document.querySelector(".assessment").textContent = "";
     timerCount = 80;
     startTimer();
     displayQuestion();
@@ -214,10 +226,11 @@ function startTimer() {
   
 startButton.addEventListener("click", startGame);
 
-// highscoreButton.addEventListener("click", viewHighScore);
+highscoreButton.addEventListener("click", viewHighScore);
 
 submitButton.addEventListener("click", function(event) {
     event.preventDefault();
+    var highScores = JSON.parse(localStorage.getItem("highScores"));
     
     // create user object from submission
     var user = {
@@ -226,11 +239,13 @@ submitButton.addEventListener("click", function(event) {
     };
   
     // set new submission to local storage 
-    localStorage.setItem("user", JSON.stringify(user));
-    localStorage.setItem("highScores", JSON.stringify([]));
-    var updatedUser = localStorage.getItem("user");
-    updatedUser = JSON.parse(updatedUser);
-    highScores.push(updatedUser);
-    console.log(updatedUser);
+    // localStorage.setItem("user", JSON.stringify(user));
+    
+    // var updatedUser = localStorage.getItem("user");
+    // updatedUser = JSON.parse(updatedUser);
+
+    highScores.push(user);
+    localStorage.setItem("highScores", JSON.stringify(highScores));
+    console.log(user);
     viewHighScore();
   });
